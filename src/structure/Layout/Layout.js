@@ -8,7 +8,7 @@ export default class Layout extends Component {
         return (
             <>
                 <Header />
-                <main className="container">
+                <main className="container" style={{ width: '800px', height: '800px', backgroundColor: 'green' }}>
                     {this.props.children}
                 </main>
             </>
