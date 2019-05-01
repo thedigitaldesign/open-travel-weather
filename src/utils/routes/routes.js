@@ -5,7 +5,7 @@ import { Route, Switch } from 'react-router-dom'
 
 // Components
 // import Map from '../../components/MapWeather/Map/Map';
-import MapWeather from '../../components/MapWeather/MapWeather';
+import MapWeather from '../../components/TravelWeather/TravelWeather';
 
 
 const Routes = () => {
