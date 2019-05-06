@@ -10,10 +10,10 @@ export default class Sidebar extends Component {
 
     render() {
         const classes = [
-            css.sidebar, 
-            //this.props.show ? css.open : css.close,
+            css.sidebar,
+            this.props.show ? css.open : css.close,
             this.props.left ? css.left : '',
-            this.props.right ? css.right : '',
+            this.props.right ? css.right : ''
         ].join(' ')
 
         const right_caret = this.props.right 
@@ -29,7 +29,7 @@ export default class Sidebar extends Component {
 
         return (
             <aside className={classes}>
-                <section className={``}>
+                <section>
                     <header>
                         <h3>
                             { this.props.title }
