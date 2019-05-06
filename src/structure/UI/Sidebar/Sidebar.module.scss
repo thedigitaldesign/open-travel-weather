@@ -31,4 +31,19 @@
     &.open {
         transform: translateX(0);
     }
+
+    .sidebar_toggle {
+        position: absolute;
+        width: 40px;
+        height: 60px;
+        top: 110px;
+
+        &.left {
+            right: 0;
+        }
+
+        &.right {
+            left: 0;
+        }
+    }
 }

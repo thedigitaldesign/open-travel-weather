@@ -6,7 +6,8 @@ import css from './AutoComplete.module.scss'
 
 export default class AutoComplete extends Component {
     state = {
-        address: ''
+        address: '',
+        latlng: {}
     }
 
     changeHandler = address => {
@@ -16,13 +17,30 @@ export default class AutoComplete extends Component {
     }
 
     selectHandler = address => {
-        this.setState({
-            address
-        })
-
         geocodeByAddress(address)
-            .then(results => getLatLng(results[0]))
-            .then(latLng => console.log('Success: ', latLng))
+            .then(results => {
+                getLatLng(results[0])
+                    .then(latlng => {
+                        this.setState(() => {
+                            return {
+                                latlng
+                            }
+                        })
+                    })
+
+                this.setState(() => {
+                    return {
+                        address: results[0].formatted_address
+                    }
+                })
+            })
+            .then(() => {
+                const place = {
+                    address: this.state.address,
+                    latlng: this.state.latlng
+                }
+                this.props.place(place)
+            })
             .catch(error => console.error('Error: ', error))
     }
 
@@ -40,8 +58,6 @@ export default class AutoComplete extends Component {
                                 placeholder: this.props.placeholder, 
                                 className: css.location_search_input
                             })}
-                            value={this.state.address}
-                            onChange={this.props.place}
                         />
                         <div className={css.autocomplete_dropdown_container}>
                             {loading && <div>Loading...</div>}

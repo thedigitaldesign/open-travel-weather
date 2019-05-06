@@ -16,11 +16,6 @@ export default class GoogleMap extends Component {
         mapInstance: null,
         mapApi: null,
         places: [],
-        origin: '',
-        destination: ''
-    }
-
-    static defaultProps = {
         center: {
             lat: 39.63,
             lng: -111.61
@@ -28,43 +23,32 @@ export default class GoogleMap extends Component {
         zoom: 8
     }
 
-    RouteOriginHandler = origin => {
-        this.setState({
-            origin
-        })
+    // GoogleMapApiHandler = (google) => {
+    //     console.log('[GoogleMaps] google: ', google)
+    //     let directionsService = new google.maps.DirectionsService()
+    //     let directionsDisplay = new google.maps.DirectionsRenderer()
 
-        console.log('[RouteOriginHandler] this.state: ', this.state)
-    }
+    //     directionsDisplay.setMap(google.map)
 
-    RouteDestinationHandler = destination => {
-        this.setState({
-            destination
-        })
+    //     console.log('this.state.places: ', this.state.places.length)
 
-        console.log('[RouteDestinationHandler] this.state: ', this.state)
-    }
+    //     directionsService.route(
+    //         {
+    //             travelMode: 'DRIVING',
+    //             origin: 80, //this.state.places[0].address,
+    //             destination: -111 //this.state.places[1].address
+    //         },
+    //         (DirectionsResult, DirectionsStatus) => {
+    //             if (DirectionsStatus === 'OK') {
+    //                 directionsDisplay.setDirections(DirectionsResult);
+    //             }
+    //         }
+    //     )
 
-    GoogleMapApiHandler = (google) => {
-        console.log('[GoogleMaps] google: ', google)
-        let directionsService = new google.maps.DirectionsService()
-        let directionsDisplay = new google.maps.DirectionsRenderer()
-        
-        directionsDisplay.setMap(google.map)
-        directionsService.route(
-            {
-                travelMode: 'DRIVING',
-                origin: this.state.origin,
-                destination: this.state.destination
-            },
-            (DirectionsResult, DirectionsStatus) => {        
-                console.log('DirectionsResult', DirectionsResult)
-                console.log('DirectionsStatus', DirectionsStatus)
-                if (DirectionsStatus === 'OK') {
-                    directionsDisplay.setDirections(DirectionsResult);
-                }
-            }
-        )
-    }
+    //     if (this.state.places.length) {
+            
+    //     }
+    // }
 
     ApiHasLoaded = (map, maps) => {
         this.setState({
@@ -75,7 +59,15 @@ export default class GoogleMap extends Component {
     }
 
     AddPlace = (place) => {
-        this.setState({ places: [place] });
+        this.setState((prevState) => {
+            return {
+                places: prevState.places.concat(place)
+            }
+        });
+    }
+
+    SearchHandler = () => {
+        console.log('[SearchHandler] places: ', this.state.places)
     }
 
     render() {
@@ -83,16 +75,19 @@ export default class GoogleMap extends Component {
         return (
             <div className={css.google_map}>
                 <Sidebar title="Directions" left show>
-                    <AutoComplete placeholder="Choose starting point" place={this.RouteOriginHandler} />
-                    <AutoComplete placeholder="Choose destination" place={(place) => this.RouteDestinationHandler(place)} />
+                    <AutoComplete placeholder="Choose starting point" place={this.AddPlace} />
+                    <AutoComplete placeholder="Choose destination" place={this.AddPlace} />
+                    <button className="btn btn-success" onClick={this.SearchHandler}>Search</button>
                 </Sidebar>
 
                 <GoogleMapReact
                     bootstrapURLKeys={{ key: process.env.REACT_APP_GOOGLE_MAPS_API_KEY }}
+                    defaultZoom={this.state.zoom}
+                    defaultCenter={this.state.center}
                     yesIWantToUseGoogleMapApiInternals
-                    // onGoogleApiLoaded={({ map, maps }) => this.ApiHasLoaded(map, maps)}
-                    onGoogleApiLoaded={this.GoogleMapApiHandler}
-                    {...this.props}>
+                    onGoogleApiLoaded={({ map, maps }) => this.ApiHasLoaded(map, maps)}
+                    {...this.props}
+                >
                     {this.props.children}
                 </GoogleMapReact>
 
