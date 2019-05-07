@@ -20,7 +20,8 @@ export default class GoogleMap extends Component {
             lat: 39.63,
             lng: -111.61
         },
-        zoom: 8
+        zoom: 8,
+        show: false
     }
 
     // GoogleMapApiHandler = (google) => {
@@ -70,11 +71,19 @@ export default class GoogleMap extends Component {
         console.log('[SearchHandler] places: ', this.state.places)
     }
 
+    SidebarToggle = () => {
+        this.setState((prevState) => {
+            return {
+                show: !prevState.show
+            }
+        })
+    }
+
     render() {
         console.log('[Map]')
         return (
             <div className={css.google_map}>
-                <Sidebar title="Directions" left show>
+                <Sidebar title="Directions" left show={!this.state.show} toggle={this.SidebarToggle}>
                     <AutoComplete placeholder="Choose starting point" place={this.AddPlace} />
                     <AutoComplete placeholder="Choose destination" place={this.AddPlace} />
                     <button className="btn btn-success" onClick={this.SearchHandler}>Search</button>
@@ -91,9 +100,9 @@ export default class GoogleMap extends Component {
                     {this.props.children}
                 </GoogleMapReact>
 
-                <Sidebar title="Weather" right show={false}>
+                {/* <Sidebar title="Weather" right show={this.state.show} toggle={this.SidebarToggle}>
 
-                </Sidebar>
+                </Sidebar> */}
             </div>
 
             // <>

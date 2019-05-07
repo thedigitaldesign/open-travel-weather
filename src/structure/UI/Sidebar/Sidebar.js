@@ -4,11 +4,37 @@ import React, { Component } from 'react'
 import css from './Sidebar.module.scss'
 
 export default class Sidebar extends Component {
-    // state = {
-    //     show: true
-    // }
+    RenderRightCaret = (toggle) => {
+        let element = (
+            this.props.right 
+                ? ( toggle 
+                        ? <i className={`fas fa-caret-right`}></i> 
+                        : <i className={`fas fa-caret-left`}></i> ) 
+                : null
+        )
+
+        return element
+    }
+
+    RenderLeftCaret = (toggle) => {
+        console.log('[RenderLeftCaret] toggle: ', toggle)
+
+        let element = (
+            this.props.left 
+                ? ( toggle
+                        ? <i className={`fas fa-caret-left`}></i> 
+                        : <i className={`fas fa-caret-right`}></i> ) 
+                : null
+        )
+
+        console.log('[RenderLeftCaret] element: ', element)
+
+        return element
+    }
 
     render() {
+        console.log('[Sidebar]')
+
         const classes = [
             css.sidebar,
             this.props.show ? css.open : css.close,
@@ -16,16 +42,8 @@ export default class Sidebar extends Component {
             this.props.right ? css.right : ''
         ].join(' ')
 
-        const right_caret = this.props.right 
-            ? ( this.props.show 
-                    ? <i className="fas fa-caret-right"></i> 
-                    : <i className="fas fa-caret-left"></i> ) 
-            : null
-        const left_caret = this.props.left 
-            ? ( this.props.show 
-                    ? <i className="fas fa-caret-left"></i> 
-                    : <i className="fas fa-caret-right"></i> ) 
-            : null
+        const right_caret = this.RenderRightCaret(this.props.show)
+        let left_caret = this.RenderLeftCaret(this.props.show)
 
         return (
             <aside className={classes}>
@@ -41,16 +59,16 @@ export default class Sidebar extends Component {
 
                 { this.props.left 
                     ? (
-                        <div className={`${ css.sidebar_toggle } ${ css.left }`}>
-                            { this.props.left ? left_caret : null }
+                        <div className={`${ css.sidebar_toggle } ${ css.left }`} onClick={ this.props.toggle }>
+                            { left_caret }
                         </div>
                     )
                     : null }
                 
                 { this.props.right 
                     ? (
-                        <div className={`${ css.sidebar_toggle } ${ css.right }`}>
-                            { this.props.right ? right_caret : null }
+                        <div className={`${ css.sidebar_toggle } ${ css.right }`} onClick={ this.props.toggle }>
+                            { right_caret }
                         </div>
                     )
                     : null }
