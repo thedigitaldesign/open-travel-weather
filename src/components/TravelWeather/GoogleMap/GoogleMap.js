@@ -3,6 +3,9 @@ import React, { Component } from 'react'
 // Packages
 import GoogleMapReact from 'google-map-react'
 
+// Components
+import Marker from './Marker/Marker'
+
 // UI
 import Sidebar from '../../../structure/UI/Sidebar/Sidebar'
 import AutoComplete from '../../../structure/UI/AutoComplete/AutoComplete'
@@ -81,23 +84,35 @@ export default class GoogleMap extends Component {
 
     render() {
         console.log('[Map]')
+
+        const {
+            places, mapApiLoaded, mapInstance, mapApi,
+          } = this.state;
+
         return (
             <div className={css.google_map}>
                 <Sidebar title="Directions" left show={!this.state.show} toggle={this.SidebarToggle}>
-                    <AutoComplete placeholder="Choose starting point" place={this.AddPlace} />
-                    <AutoComplete placeholder="Choose destination" place={this.AddPlace} />
+                    { mapApiLoaded && (
+                        <>
+                            <AutoComplete placeholder="Choose starting point" place={this.AddPlace} />
+                            <AutoComplete placeholder="Choose destination" place={this.AddPlace} />
+                        </>
+                    )}
                     <button className="btn btn-success" onClick={this.SearchHandler}>Search</button>
                 </Sidebar>
 
                 <GoogleMapReact
-                    bootstrapURLKeys={{ key: process.env.REACT_APP_GOOGLE_MAPS_API_KEY }}
+                    bootstrapURLKeys={{ 
+                        key: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
+                        libraries: ['places', 'geometry']
+                    }}
                     defaultZoom={this.state.zoom}
                     defaultCenter={this.state.center}
                     yesIWantToUseGoogleMapApiInternals
                     onGoogleApiLoaded={({ map, maps }) => this.ApiHasLoaded(map, maps)}
                     {...this.props}
                 >
-                    {this.props.children}
+                    
                 </GoogleMapReact>
 
                 {/* <Sidebar title="Weather" right show={this.state.show} toggle={this.SidebarToggle}>
